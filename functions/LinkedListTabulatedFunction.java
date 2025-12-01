@@ -8,14 +8,14 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
 
-public class LinkedListTabulatedFunction implements TabulatedFunction, Externalizable, Cloneable{
+public class LinkedListTabulatedFunction implements TabulatedFunction, Externalizable{
 
-    private int size; // Размер списка
+    int size; // Размер списка // был private
 
-    private FunctionNode head; // Голова списка
-    private FunctionNode tail; // Хвост списка
+    FunctionNode head; // Голова списка // был private
+    FunctionNode tail; // Хвост списка // был private
 
-    private double leftDomainBorder, rightDomainBorder; // Левая и правая границы
+    double leftDomainBorder, rightDomainBorder; // Левая и правая границы // был private
 
 
     public LinkedListTabulatedFunction() { // Конструктор по умолчанию для Externalizable
@@ -518,36 +518,70 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
     }
 
     @Override
-    public boolean equals(Object a){
+    public boolean equals(Object a) {
         if (this == a) { // Сравнение ссылок
             return true;
         }
-        // Проверим является ли переданный объект табулированной функцией
-        if (a == null || !(a instanceof TabulatedFunction) ) { 
+
+        if (a == null) {
             return false;
         }
 
+        if (getClass() == a.getClass()) {
+            LinkedListTabulatedFunction b = (LinkedListTabulatedFunction) a;
 
-        TabulatedFunction b = (TabulatedFunction) a;
-        // Перед тем как сравнивать координаты точек табулированных функций
-        // Сравним их раазмер и область определения
-        if (this.size != b.getPointsCount()){
-            return false;
-        }
+            if (this.size != b.size) {
+                return false;
+            }
 
-        if (!(equal(this.leftDomainBorder, b.getLeftDomainBorder()) && equal(this.rightDomainBorder,
-                b.getRightDomainBorder()))){
+            if (!equal(this.leftDomainBorder, b.leftDomainBorder) ||
+                    !equal(this.rightDomainBorder, b.rightDomainBorder)) {
+                return false;
+            }
+
+            FunctionNode currentThis = this.head;
+            FunctionNode currentOther = b.head;
+
+            for (int i = 0; i < size; i++) {
+                if (currentThis == null || currentOther == null) {
                     return false;
                 }
 
-        for (int i = 0; i < size; i++){
-            if (!(equal(this.getPointX(i), b.getPointX(i)) && equal(this.getPointY(i), b.getPointY(i)))){
+                if (!equal(currentThis.getPoint().getCoorX(), currentOther.getPoint().getCoorX()) ||
+                        !equal(currentThis.getPoint().getCoorY(), currentOther.getPoint().getCoorY())) {
+                    return false;
+                }
+
+                currentThis = currentThis.getNext();
+                currentOther = currentOther.getNext();
+            }
+            return true;
+        }
+
+        if (!(a instanceof TabulatedFunction)) {
+            return false;
+        }
+
+        TabulatedFunction b = (TabulatedFunction) a;
+
+
+        if (this.size != b.getPointsCount()) {
+            return false;
+        }
+
+        if (!equal(this.leftDomainBorder, b.getLeftDomainBorder()) ||
+                !equal(this.rightDomainBorder, b.getRightDomainBorder())) {
+            return false;
+        }
+
+        for (int i = 0; i < size; i++) {
+            if (!equal(this.getPointX(i), b.getPointX(i)) ||
+                    !equal(this.getPointY(i), b.getPointY(i))) {
                 return false;
             }
         }
         return true;
-    
-        }
+    }
 
         @Override
         public int hashCode() {

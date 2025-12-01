@@ -2,13 +2,13 @@ package functions;
 import static functions.FunctionPoint.*;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
-public class ArrayTabulatedFunction implements TabulatedFunction, Serializable, Cloneable{ 
-    private double leftDomainBorder, rightDomainBorder; // Левая и правая границы
 
-   private FunctionPoint[] points; // Массив точек
-   private int size;
+public class ArrayTabulatedFunction implements TabulatedFunction, Serializable{ 
+    double leftDomainBorder, rightDomainBorder; // Левая и правая границы // был private
+
+   FunctionPoint[] points; // Массив точек // был private
+   int size; // был private
 
     public ArrayTabulatedFunction(double leftX, double rightX, int pointsCount) throws IllegalArgumentException{ // Конструктор с количеством точек
         if (leftX >= rightX){
@@ -256,26 +256,50 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Serializable, 
         if (this == a) { // Сравнение ссылок
             return true;
         }
-        // Проверим является ли переданный объект табулированной функцией
-        if (a == null || !(a instanceof TabulatedFunction) ) { 
+
+        if (a == null) {
             return false;
         }
 
+        if (getClass() == a.getClass()) {
+            ArrayTabulatedFunction b = (ArrayTabulatedFunction) a;
 
-        TabulatedFunction b = (TabulatedFunction) a;
-        // Перед тем как сравнивать координаты точек табулированных функций
-        // Сравним их раазмер и область определения
-        if (this.size != b.getPointsCount()){
-            return false;
-        }
+            if (this.size != b.size) {
+                return false;
+            }
 
-        if (!(equal(this.leftDomainBorder, b.getLeftDomainBorder()) && equal(this.rightDomainBorder,
-                b.getRightDomainBorder()))){
+            if (!equal(this.leftDomainBorder, b.leftDomainBorder) ||
+                    !equal(this.rightDomainBorder, b.rightDomainBorder)) {
+                return false;
+            }
+
+            for (int i = 0; i < size; i++) {
+                if (!equal(this.points[i].getCoorX(), b.points[i].getCoorX()) ||
+                        !equal(this.points[i].getCoorY(), b.points[i].getCoorY())) {
                     return false;
                 }
+            }
+            return true;
+        }
 
-        for (int i = 0; i < size; i++){
-            if (!(equal(points[i].getCoorX(), b.getPointX(i)) && equal(points[i].getCoorY(), b.getPointY(i)))){
+        if (!(a instanceof TabulatedFunction)) {
+            return false;
+        }
+
+        TabulatedFunction b = (TabulatedFunction) a;
+
+        if (this.size != b.getPointsCount()) {
+            return false;
+        }
+
+        if (!equal(this.leftDomainBorder, b.getLeftDomainBorder()) ||
+                !equal(this.rightDomainBorder, b.getRightDomainBorder())) {
+            return false;
+        }
+
+        for (int i = 0; i < size; i++) {
+            if (!equal(this.getPointX(i), b.getPointX(i)) ||
+                    !equal(this.getPointY(i), b.getPointY(i))) {
                 return false;
             }
         }
