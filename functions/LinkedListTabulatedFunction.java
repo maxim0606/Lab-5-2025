@@ -10,12 +10,12 @@ import java.io.Serializable;
 
 public class LinkedListTabulatedFunction implements TabulatedFunction, Externalizable{
 
-    int size; // Размер списка // был private
+    private int size; // Размер списка // был private
 
-    FunctionNode head; // Голова списка // был private
-    FunctionNode tail; // Хвост списка // был private
+    private FunctionNode head; // Голова списка // был private
+    private FunctionNode tail; // Хвост списка // был private
 
-    double leftDomainBorder, rightDomainBorder; // Левая и правая границы // был private
+    private double leftDomainBorder, rightDomainBorder; // Левая и правая границы // был private
 
 
     public LinkedListTabulatedFunction() { // Конструктор по умолчанию для Externalizable
@@ -547,8 +547,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
                     return false;
                 }
 
-                if (!equal(currentThis.getPoint().getCoorX(), currentOther.getPoint().getCoorX()) ||
-                        !equal(currentThis.getPoint().getCoorY(), currentOther.getPoint().getCoorY())) {
+                if (currentThis.getPoint().equals(currentOther.getPoint())) {
                     return false;
                 }
 

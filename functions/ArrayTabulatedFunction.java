@@ -5,10 +5,10 @@ import java.io.Serializable;
 
 
 public class ArrayTabulatedFunction implements TabulatedFunction, Serializable{ 
-    double leftDomainBorder, rightDomainBorder; // Левая и правая границы // был private
+    private double leftDomainBorder, rightDomainBorder; // Левая и правая границы // был private
 
-   FunctionPoint[] points; // Массив точек // был private
-   int size; // был private
+   private FunctionPoint[] points; // Массив точек // был private
+   private int size; // был private
 
     public ArrayTabulatedFunction(double leftX, double rightX, int pointsCount) throws IllegalArgumentException{ // Конструктор с количеством точек
         if (leftX >= rightX){
@@ -274,8 +274,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Serializable{
             }
 
             for (int i = 0; i < size; i++) {
-                if (!equal(this.points[i].getCoorX(), b.points[i].getCoorX()) ||
-                        !equal(this.points[i].getCoorY(), b.points[i].getCoorY())) {
+                if (points[i].equals(b.points[i])) {
                     return false;
                 }
             }
